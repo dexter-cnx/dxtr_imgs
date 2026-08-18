@@ -123,7 +123,10 @@ mod tests {
     #[test]
     fn linked_asset_uses_source_path() {
         let asset = linked_asset();
-        assert_eq!(asset.effective_path().unwrap(), Path::new("/photos/original.jpg"));
+        assert_eq!(
+            asset.effective_path().unwrap(),
+            Path::new("/photos/original.jpg")
+        );
     }
 
     #[test]
