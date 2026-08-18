@@ -1,0 +1,15 @@
+[package]
+name = "dxtr-imgs-ui-gpui"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish = false
+
+[dependencies]
+dxtr-imgs-app = { path = "../app" }
+dxtr-imgs-domain = { path = "../domain" }
+gpui.workspace = true
+gpui_platform.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
