@@ -1,0 +1,27 @@
+name: M1 lockfile refresh
+
+on:
+  push:
+    branches:
+      - agent/m1-raw-engine-viewport
+
+permissions:
+  contents: write
+
+jobs:
+  lockfile:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/m1-raw-engine-viewport
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Refresh and commit lockfile
+        run: |
+          cargo generate-lockfile
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Cargo.lock
+          git rm .github/workflows/m1-lockfile.yml
+          git commit -m "Refresh Cargo lockfile for M1"
+          git push origin HEAD:agent/m1-raw-engine-viewport
