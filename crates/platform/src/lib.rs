@@ -4,8 +4,7 @@ use rfd::FileDialog;
 use thiserror::Error;
 
 pub const IMAGE_AND_RAW_EXTENSIONS: &[&str] = &[
-    "jpg", "jpeg", "png", "tif", "tiff", "webp", "arw", "cr2", "cr3", "nef", "dng", "raf",
-    "orf",
+    "jpg", "jpeg", "png", "tif", "tiff", "webp", "arw", "cr2", "cr3", "nef", "dng", "raf", "orf",
 ];
 
 pub trait PlatformFileDialog: Send + Sync {
