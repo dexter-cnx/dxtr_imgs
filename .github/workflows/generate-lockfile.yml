@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - agent/m0-review-hardening
+  pull_request:
 
 jobs:
   lockfile:
