@@ -230,11 +230,8 @@ mod tests {
     #[test]
     fn raw_container_falls_back_to_embedded_jpeg() {
         let path = temp_path("raw");
-        let source = DynamicImage::ImageRgba8(RgbaImage::from_pixel(
-            3,
-            2,
-            Rgba([120, 90, 60, 255]),
-        ));
+        let source =
+            DynamicImage::ImageRgba8(RgbaImage::from_pixel(3, 2, Rgba([120, 90, 60, 255])));
         let mut jpeg = Vec::new();
         JpegEncoder::new_with_quality(&mut jpeg, 95)
             .write_image(
