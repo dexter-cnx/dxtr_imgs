@@ -194,7 +194,7 @@ mod tests {
     use std::time::{SystemTime, UNIX_EPOCH};
 
     use image::codecs::jpeg::JpegEncoder;
-    use image::{DynamicImage, ImageEncoder, Rgba, RgbaImage};
+    use image::{ExtendedColorType, ImageEncoder, Rgb, RgbImage, Rgba, RgbaImage};
 
     use super::*;
 
@@ -230,15 +230,14 @@ mod tests {
     #[test]
     fn raw_container_falls_back_to_embedded_jpeg() {
         let path = temp_path("raw");
-        let source =
-            DynamicImage::ImageRgba8(RgbaImage::from_pixel(3, 2, Rgba([120, 90, 60, 255])));
+        let source = RgbImage::from_pixel(3, 2, Rgb([120, 90, 60]));
         let mut jpeg = Vec::new();
         JpegEncoder::new_with_quality(&mut jpeg, 95)
             .write_image(
-                source.as_bytes(),
+                source.as_raw(),
                 source.width(),
                 source.height(),
-                source.color().into(),
+                ExtendedColorType::Rgb8,
             )
             .expect("embedded JPEG should encode");
 
