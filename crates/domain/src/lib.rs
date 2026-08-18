@@ -1,4 +1,6 @@
+use std::fmt;
 use std::path::{Path, PathBuf};
+use std::str::FromStr;
 
 use thiserror::Error;
 use uuid::Uuid;
@@ -12,11 +14,33 @@ impl WorkplaceId {
     pub fn new() -> Self {
         Self(Uuid::new_v4())
     }
+
+    pub const fn from_uuid(value: Uuid) -> Self {
+        Self(value)
+    }
+
+    pub const fn as_uuid(&self) -> &Uuid {
+        &self.0
+    }
 }
 
 impl Default for WorkplaceId {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+impl fmt::Display for WorkplaceId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl FromStr for WorkplaceId {
+    type Err = uuid::Error;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        Uuid::parse_str(value).map(Self::from_uuid)
     }
 }
 
@@ -27,11 +51,33 @@ impl AssetId {
     pub fn new() -> Self {
         Self(Uuid::new_v4())
     }
+
+    pub const fn from_uuid(value: Uuid) -> Self {
+        Self(value)
+    }
+
+    pub const fn as_uuid(&self) -> &Uuid {
+        &self.0
+    }
 }
 
 impl Default for AssetId {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+impl fmt::Display for AssetId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl FromStr for AssetId {
+    type Err = uuid::Error;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        Uuid::parse_str(value).map(Self::from_uuid)
     }
 }
 
@@ -118,6 +164,26 @@ mod tests {
     #[test]
     fn default_workplace_has_expected_name() {
         assert_eq!(Workplace::default_workplace().name, DEFAULT_WORKPLACE_NAME);
+    }
+
+    #[test]
+    fn workplace_id_round_trips_through_persisted_text() {
+        let original = WorkplaceId::new();
+        let encoded = original.to_string();
+        let decoded = encoded.parse::<WorkplaceId>().unwrap();
+
+        assert_eq!(decoded, original);
+        assert_eq!(decoded.as_uuid(), original.as_uuid());
+    }
+
+    #[test]
+    fn asset_id_round_trips_through_persisted_text() {
+        let original = AssetId::new();
+        let encoded = original.to_string();
+        let decoded = encoded.parse::<AssetId>().unwrap();
+
+        assert_eq!(decoded, original);
+        assert_eq!(decoded.as_uuid(), original.as_uuid());
     }
 
     #[test]
