@@ -5,9 +5,9 @@ use dxtr_imgs_app::{EnglishTranslator, MessageKey, Translator};
 use dxtr_imgs_domain::{Workplace, DEFAULT_WORKPLACE_NAME};
 use dxtr_imgs_platform::{DesktopFileDialog, PlatformFileDialog};
 use gpui::{
-    div, img, point, prelude::*, px, rgb, size, App, Bounds, Context, MouseButton,
-    MouseDownEvent, MouseMoveEvent, MouseUpEvent, PinchEvent, Pixels, Point, Render, RenderImage,
-    ScrollDelta, ScrollWheelEvent, Window, WindowBounds, WindowOptions,
+    div, img, prelude::*, px, rgb, size, App, Bounds, Context, MouseButton, MouseDownEvent,
+    MouseMoveEvent, MouseUpEvent, PinchEvent, Pixels, Point, Render, RenderImage, ScrollDelta,
+    ScrollWheelEvent, Window, WindowBounds, WindowOptions,
 };
 use gpui_platform::application;
 use tracing::info;
@@ -221,8 +221,7 @@ impl DesktopShell {
             } else {
                 1.0 / (1.0 + delta.abs() * 0.01)
             };
-            self.viewport.zoom =
-                (self.viewport.zoom * zoom_factor).clamp(MIN_ZOOM, MAX_ZOOM);
+            self.viewport.zoom = (self.viewport.zoom * zoom_factor).clamp(MIN_ZOOM, MAX_ZOOM);
         } else {
             let delta = match event.delta {
                 ScrollDelta::Pixels(pixels) => pixels,
@@ -234,12 +233,7 @@ impl DesktopShell {
         cx.notify();
     }
 
-    fn handle_pinch(
-        &mut self,
-        event: &PinchEvent,
-        _window: &mut Window,
-        cx: &mut Context<Self>,
-    ) {
+    fn handle_pinch(&mut self, event: &PinchEvent, _window: &mut Window, cx: &mut Context<Self>) {
         if self.viewport.render_image.is_some() {
             self.viewport.zoom =
                 (self.viewport.zoom * (1.0 + event.delta)).clamp(MIN_ZOOM, MAX_ZOOM);
@@ -294,6 +288,14 @@ impl Render for DesktopShell {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let tr = &self.translator;
         let zoom_label = format!("{}%", (self.viewport.zoom * 100.0).round() as i32);
+        let source_label = self
+            .viewport
+            .image_path
+            .as_ref()
+            .and_then(|path| path.file_name())
+            .and_then(|name| name.to_str())
+            .unwrap_or("No image open")
+            .to_owned();
 
         div()
             .flex()
@@ -324,9 +326,14 @@ impl Render for DesktopShell {
                     .border_b_1()
                     .border_color(rgb(0x2b2e34))
                     .bg(rgb(0x17191d))
-                    .child(Self::toolbar_button("open-image", "Open Image", cx, |this, cx| {
-                        this.open_image(cx);
-                    }))
+                    .child(Self::toolbar_button(
+                        "open-image",
+                        "Open Image",
+                        cx,
+                        |this, cx| {
+                            this.open_image(cx);
+                        },
+                    ))
                     .child(Self::toolbar_button("fit", "Fit", cx, |this, cx| {
                         this.fit(cx);
                     }))
@@ -339,7 +346,13 @@ impl Render for DesktopShell {
                     .child(Self::toolbar_button("zoom-in", "+", cx, |this, cx| {
                         this.zoom_by(1.2, cx);
                     }))
-                    .child(div().ml_2().text_sm().text_color(rgb(0x8d929c)).child(zoom_label)),
+                    .child(
+                        div()
+                            .ml_2()
+                            .text_sm()
+                            .text_color(rgb(0x8d929c))
+                            .child(zoom_label),
+                    ),
             )
             .child(
                 div()
@@ -426,6 +439,12 @@ impl Render for DesktopShell {
                             .border_color(rgb(0x2b2e34))
                             .bg(rgb(0x17191d))
                             .child(tr.tr(MessageKey::Develop))
+                            .child(
+                                div()
+                                    .text_sm()
+                                    .text_color(rgb(0x858a94))
+                                    .child(source_label),
+                            )
                             .child("Exposure        0.00")
                             .child("Temperature     0.00")
                             .child("Contrast        1.00")
