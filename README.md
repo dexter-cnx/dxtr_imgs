@@ -16,9 +16,11 @@ The project is a new desktop codebase, not a Flutter migration branch. It preser
 
 ## Current milestone
 
-**M0 — Repository foundation**
+**M1 — Direct raw-engine viewport**
 
-The initial foundation establishes the Cargo workspace, pinned GPUI dependency, native macOS window, application/domain/platform boundaries, structured errors/logging, localization boundary, Makefile tooling, and canonical architecture documentation.
+The desktop shell now has a direct Rust image path: native file dialog → `raw-engine` → owned RGBA buffer → GPUI `RenderImage`. M1 supports common raster previews plus the existing embedded-JPEG RAW-preview behavior, with Fit, 1:1, bounded zoom, mouse/trackpad pan and pinch/Cmd-scroll zoom.
+
+This milestone intentionally does **not** add real sensor RAW demosaic/debayer or expand the processing feature set.
 
 ## Commands
 
@@ -33,6 +35,16 @@ make run
 
 `make run` launches the GPUI desktop shell on macOS.
 
+## M1 validation
+
+After CI passes, physical macOS validation should cover:
+
+- native application launch;
+- Open Image native dialog;
+- raster preview and orientation;
+- an existing supported RAW file through embedded preview;
+- Fit / 1:1 / zoom / pan / pinch / Cmd-scroll behavior.
+
 ## Documentation
 
 Start with:
@@ -40,6 +52,7 @@ Start with:
 - `docs/PROJECT_HANDOFF.md` — canonical project status and execution plan
 - `docs/PRODUCT_SPEC.md` — approved product semantics
 - `docs/ARCHITECTURE.md` — target architecture and crate boundaries
+- `docs/CODE_WALKTHROUGH.md` — current code/data flow
 - `docs/NIXIN_SOURCE_REUSE.md` — source/behavior reuse record
 - `docs/GPUI_NOTES.md` — GPUI pin and upgrade policy
 
