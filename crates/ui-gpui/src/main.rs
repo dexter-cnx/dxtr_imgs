@@ -80,6 +80,7 @@ impl Render for DesktopShell {
                             .child(tr.tr(MessageKey::Develop)),
                     ),
             )
+    }
 }
 
 fn init_tracing() {
