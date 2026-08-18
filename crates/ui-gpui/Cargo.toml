@@ -9,7 +9,10 @@ publish = false
 [dependencies]
 dxtr-imgs-app = { path = "../app" }
 dxtr-imgs-domain = { path = "../domain" }
+dxtr-imgs-platform = { path = "../platform" }
+dxtr-imgs-raw-engine = { path = "../raw-engine" }
 gpui.workspace = true
 gpui_platform.workspace = true
+image.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
