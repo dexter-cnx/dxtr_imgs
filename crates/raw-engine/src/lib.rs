@@ -133,8 +133,8 @@ fn extract_best_embedded_jpeg(bytes: &[u8]) -> Result<DynamicImage, String> {
                     {
                         best = Some((area, image));
                     }
+                    break;
                 }
-                break;
             }
             end += 1;
         }
@@ -209,6 +209,19 @@ mod tests {
         ))
     }
 
+    fn encode_test_jpeg(source: &RgbImage) -> Vec<u8> {
+        let mut jpeg = Vec::new();
+        JpegEncoder::new_with_quality(&mut jpeg, 95)
+            .write_image(
+                source.as_raw(),
+                source.width(),
+                source.height(),
+                ExtendedColorType::Rgb8,
+            )
+            .expect("test JPEG should encode");
+        jpeg
+    }
+
     #[test]
     fn raster_preview_returns_owned_rgba() {
         let path = temp_path("png");
@@ -231,15 +244,7 @@ mod tests {
     fn raw_container_falls_back_to_embedded_jpeg() {
         let path = temp_path("raw");
         let source = RgbImage::from_pixel(3, 2, Rgb([120, 90, 60]));
-        let mut jpeg = Vec::new();
-        JpegEncoder::new_with_quality(&mut jpeg, 95)
-            .write_image(
-                source.as_raw(),
-                source.width(),
-                source.height(),
-                ExtendedColorType::Rgb8,
-            )
-            .expect("embedded JPEG should encode");
+        let jpeg = encode_test_jpeg(&source);
 
         let mut container = b"synthetic-raw-prefix".to_vec();
         container.extend_from_slice(&jpeg);
@@ -251,6 +256,26 @@ mod tests {
 
         assert_eq!((developed.width, developed.height), (3, 2));
         assert!(developed.has_valid_rgba_len());
+    }
+
+    #[test]
+    fn embedded_jpeg_scanner_skips_nested_thumbnail_eoi() {
+        let outer = RgbImage::from_pixel(4, 3, Rgb([120, 90, 60]));
+        let outer_jpeg = encode_test_jpeg(&outer);
+        let thumbnail = RgbImage::from_pixel(1, 1, Rgb([10, 20, 30]));
+        let thumbnail_jpeg = encode_test_jpeg(&thumbnail);
+
+        let comment_length = u16::try_from(thumbnail_jpeg.len() + 2)
+            .expect("thumbnail JPEG should fit in a JPEG comment segment");
+        let mut nested = Vec::new();
+        nested.extend_from_slice(&outer_jpeg[..2]);
+        nested.extend_from_slice(&[0xff, 0xfe]);
+        nested.extend_from_slice(&comment_length.to_be_bytes());
+        nested.extend_from_slice(&thumbnail_jpeg);
+        nested.extend_from_slice(&outer_jpeg[2..]);
+
+        let preview = extract_best_embedded_jpeg(&nested).expect("outer JPEG should decode");
+        assert_eq!(preview.dimensions(), (4, 3));
     }
 
     #[test]
