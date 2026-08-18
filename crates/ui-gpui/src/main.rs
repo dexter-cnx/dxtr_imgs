@@ -1,8 +1,8 @@
 use dxtr_imgs_app::{EnglishTranslator, MessageKey, Translator};
 use dxtr_imgs_domain::{Workplace, DEFAULT_WORKPLACE_NAME};
 use gpui::{
-    App, Bounds, Context, Render, Window, WindowBounds, WindowOptions, div, prelude::*, px, rgb,
-    size,
+    div, prelude::*, px, rgb, size, App, Bounds, Context, Render, Window, WindowBounds,
+    WindowOptions,
 };
 use gpui_platform::application;
 use tracing::info;
@@ -59,16 +59,11 @@ impl Render for DesktopShell {
                             .child(tr.tr(MessageKey::RecentImports)),
                     )
                     .child(
-                        div()
-                            .flex_1()
-                            .flex()
-                            .items_center()
-                            .justify_center()
-                            .child(
-                                div()
-                                    .text_color(rgb(0x8d929c))
-                                    .child("Catalog viewport foundation"),
-                            ),
+                        div().flex_1().flex().items_center().justify_center().child(
+                            div()
+                                .text_color(rgb(0x8d929c))
+                                .child("Catalog viewport foundation"),
+                        ),
                     )
                     .child(
                         div()
