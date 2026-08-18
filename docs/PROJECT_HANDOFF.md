@@ -15,7 +15,7 @@ Canonical status document for `dexter-cnx/dxtr_imgs`.
 
 ### M0 — Repository foundation
 
-Status: **in progress on `agent/m0-rust-gpui-foundation`**.
+Status: **complete; review hardening is being finalized in PR #2**.
 
 Implemented foundation:
 
@@ -26,20 +26,21 @@ Implemented foundation:
 - platform service boundary in `platform`
 - native GPUI desktop shell in `ui-gpui`
 - default Workplace semantics (`My workplace`)
+- stable persisted-ID round-trip APIs for Workplace/Asset identity
+- committed executable-workspace `Cargo.lock`
 - structured domain/repository/platform errors
 - tracing setup
 - Makefile development gates
 - architecture/product/source-reuse documentation
 
-Validation still required on a physical macOS development environment:
+Repository CI validation covers:
 
 - `cargo fmt --all -- --check`
 - `cargo check --workspace`
 - `cargo test --workspace`
 - `cargo clippy --workspace --all-targets -- -D warnings`
-- `cargo run -p dxtr-imgs-ui-gpui`
 
-The connected execution environment used to bootstrap the repository cannot resolve GitHub hosts or run GitHub CLI, so dependency resolution/runtime validation is intentionally left as a gate rather than falsely claimed as complete.
+Physical macOS launch validation remains a product/runtime gate for `cargo run -p dxtr-imgs-ui-gpui`.
 
 ## Architecture decisions already accepted
 
@@ -52,12 +53,14 @@ The connected execution environment used to bootstrap the repository cannot reso
 7. `raw-engine` will be integrated directly as Rust in M1; no Dart/C-FFI hot path.
 8. Real RAW demosaic/debayer remains out of scope.
 9. GPUI is pinned to the Zed revision already validated by the Nixin spike: `fd90c0af7f021d89e511dd9a5f92d4f04ec29314`.
+10. Executable dependency resolution is committed through `Cargo.lock`; GPUI pinning alone is not considered sufficient reproducibility.
 
 ## Workspace layout
 
 ```text
 .
 ├── Cargo.toml
+├── Cargo.lock
 ├── crates/
 │   ├── domain/       # framework-neutral product invariants
 │   ├── app/          # commands/use-cases/repository + localization contracts
@@ -69,12 +72,12 @@ The connected execution environment used to bootstrap the repository cannot reso
 └── Makefile
 ```
 
-Crates for catalog/import/thumbnail/storage/raw-engine should be introduced only when the responsibility is substantial enough to justify a separate crate. Avoid aesthetic micro-crates.
+Crates for catalog/import/thumbnail/storage/raw-engine should be introduced only when the responsibility is substantial enough to justify a separate crate. M1 introduces `raw-engine` because it is an independent image-engine boundary with direct Rust API ownership.
 
 ## Milestone plan
 
-- **M0** repository foundation + GPUI shell + docs
-- **M1** direct `raw-engine` integration, raster/current RAW embedded preview, Fit/1:1/pan/zoom
+- **M0** repository foundation + GPUI shell + docs — complete after PR #2 review hardening
+- **M1** direct `raw-engine` integration, raster/current RAW embedded preview, Fit/1:1/pan/zoom — next
 - **M2** Workplace/catalog domain + repository contract tests
 - **M3** virtualized Grid + Filmstrip + shared selection + 5,000 fixture
 - **M4** bounded thumbnail memory/disk cache
@@ -88,6 +91,6 @@ Crates for catalog/import/thumbnail/storage/raw-engine should be introduced only
 
 Use branch → focused PR → CI → merge → delete branch. Before push/merge run format, compile, tests and clippy locally. Do not mix GPUI upgrades, storage migrations, domain refactors and feature work unless technically inseparable.
 
-## Next action after M0 validation
+## Next action
 
-Fix only genuine M0 compile/format issues, merge M0, delete the branch, then start M1 as a separate PR. Do not expand the processing roadmap while integrating `raw-engine`.
+Merge PR #2 after the latest CI gate, resolve the two PR #1 review threads with the follow-up reference, then start M1 from updated `main`. M1 must preserve the current embedded-JPEG RAW-preview behavior and must not expand into sensor RAW demosaic/debayer or new processing features.
