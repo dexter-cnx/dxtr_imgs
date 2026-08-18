@@ -15,7 +15,7 @@ Canonical status document for `dexter-cnx/dxtr_imgs`.
 
 ### M0 — Repository foundation
 
-Status: **complete; review hardening is being finalized in PR #2**.
+Status: **complete; PR #2 review hardening validated by CI**.
 
 Implemented foundation:
 
@@ -33,7 +33,7 @@ Implemented foundation:
 - Makefile development gates
 - architecture/product/source-reuse documentation
 
-Repository CI validation covers:
+Repository CI validation passed:
 
 - `cargo fmt --all -- --check`
 - `cargo check --workspace`
@@ -76,8 +76,8 @@ Crates for catalog/import/thumbnail/storage/raw-engine should be introduced only
 
 ## Milestone plan
 
-- **M0** repository foundation + GPUI shell + docs — complete after PR #2 review hardening
-- **M1** direct `raw-engine` integration, raster/current RAW embedded preview, Fit/1:1/pan/zoom — next
+- **M0** repository foundation + GPUI shell + docs — complete
+- **M1** direct `raw-engine` integration, raster/current RAW embedded preview, Fit/1:1/pan/zoom — active on `agent/m1-raw-engine-viewport`
 - **M2** Workplace/catalog domain + repository contract tests
 - **M3** virtualized Grid + Filmstrip + shared selection + 5,000 fixture
 - **M4** bounded thumbnail memory/disk cache
@@ -93,4 +93,4 @@ Use branch → focused PR → CI → merge → delete branch. Before push/merge 
 
 ## Next action
 
-Merge PR #2 after the latest CI gate, resolve the two PR #1 review threads with the follow-up reference, then start M1 from updated `main`. M1 must preserve the current embedded-JPEG RAW-preview behavior and must not expand into sensor RAW demosaic/debayer or new processing features.
+M1 is now the active implementation milestone. Preserve the current embedded-JPEG RAW-preview behavior and do not expand into sensor RAW demosaic/debayer or new processing features.
