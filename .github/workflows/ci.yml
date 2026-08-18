@@ -28,6 +28,6 @@ jobs:
       - name: Clippy
         run: cargo clippy --workspace --all-targets -- -D warnings
       - name: Install declared MSRV
-        run: rustup toolchain install 1.93.0 --profile minimal
+        run: rustup toolchain install 1.95.0 --profile minimal
       - name: MSRV check
-        run: cargo +1.93.0 check --workspace --locked
+        run: cargo +1.95.0 check --workspace --locked
