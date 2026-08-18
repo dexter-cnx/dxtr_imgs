@@ -10,14 +10,15 @@ Canonical status document for `dexter-cnx/dxtr_imgs`.
 - Initial production platform: macOS
 - UI runtime: GPUI
 - Core language: Rust
+- Declared Rust MSRV: **1.95**
 
 ## Current milestone
 
 ### M1 — Direct raw-engine viewport
 
-Status: **in progress on `agent/m1-raw-engine-viewport`**.
+Status: **implementation validated by hosted CI; physical macOS viewport validation remains**.
 
-M0 is functionally complete. PR #2 is the focused post-review hardening change that adds persisted-ID round trips and the executable workspace `Cargo.lock` before M1 is based permanently on `main`.
+M0 and its PR #2 review-hardening follow-up are merged into `main`. Persisted-ID round trips, committed executable-workspace `Cargo.lock`, the GPUI-compatible Rust 1.95 MSRV, and ruleset-aligned required CI contexts are now baseline repository policy.
 
 M1 implementation currently includes:
 
@@ -48,12 +49,15 @@ M1 explicitly does **not** include:
 - thumbnail/cache work;
 - Develop-panel feature expansion.
 
-Repository CI validation remains:
+Repository required CI contexts are:
 
-- `cargo fmt --all -- --check`
-- `cargo check --workspace`
-- `cargo test --workspace`
-- `cargo clippy --workspace --all-targets -- -D warnings`
+- `PR CI required`
+  - `cargo fmt --all -- --check`
+  - `cargo check --workspace`
+  - `cargo test --workspace`
+  - `cargo clippy --workspace --all-targets -- -D warnings`
+  - `cargo +1.95.0 check --workspace --locked`
+- `Merge gate` — lightweight final context that depends on `PR CI required`
 
 Physical macOS validation is required before M1 is marked complete:
 
@@ -76,8 +80,9 @@ Physical macOS validation is required before M1 is marked complete:
 8. Real RAW demosaic/debayer remains out of scope.
 9. GPUI is pinned to the Zed revision already validated by the Nixin spike: `fd90c0af7f021d89e511dd9a5f92d4f04ec29314`.
 10. Executable dependency resolution is committed through `Cargo.lock`; GPUI pinning alone is not sufficient reproducibility.
-11. M1 keeps image-engine output UI-neutral as owned RGBA; GPUI-specific channel adaptation/render-image construction stays in `ui-gpui`.
-12. Platform file dialogs stay behind the platform boundary; raw-engine does not own picker UX.
+11. The actual pinned GPUI graph/API surface establishes Rust 1.95 as the repository MSRV; CI validates that floor with a locked workspace check.
+12. M1 keeps image-engine output UI-neutral as owned RGBA; GPUI-specific channel adaptation/render-image construction stays in `ui-gpui`.
+13. Platform file dialogs stay behind the platform boundary; raw-engine does not own picker UX.
 
 ## Workspace layout
 
@@ -101,8 +106,8 @@ Future catalog/import/thumbnail/storage crates should be introduced only when th
 
 ## Milestone plan
 
-- **M0** repository foundation + GPUI shell + docs — complete, with PR #2 review hardening
-- **M1** direct `raw-engine` integration, raster/current RAW embedded preview, Fit/1:1/pan/zoom — in progress
+- **M0** repository foundation + GPUI shell + docs — complete, including merged PR #2 review hardening
+- **M1** direct `raw-engine` integration, raster/current RAW embedded preview, Fit/1:1/pan/zoom — hosted CI validated; physical macOS validation remains
 - **M2** Workplace/catalog domain + repository contract tests
 - **M3** virtualized Grid + Filmstrip + shared selection + 5,000 fixture
 - **M4** bounded thumbnail memory/disk cache
@@ -114,8 +119,8 @@ Future catalog/import/thumbnail/storage crates should be introduced only when th
 
 ## PR policy
 
-Use branch → focused PR → CI → merge → delete branch. Before push/merge run format, compile, tests and clippy locally. Do not mix GPUI upgrades, storage migrations, domain refactors and feature work unless technically inseparable.
+Use branch → focused PR → CI → merge → delete branch. Before push/merge run format, compile, tests and clippy locally. Required repository contexts must remain aligned with the ruleset (`PR CI required`, `Merge gate`). Do not mix GPUI upgrades, storage migrations, domain refactors and feature work unless technically inseparable.
 
 ## Next action
 
-Finish repository CI for M1, fix only M1 integration defects, then perform the physical macOS viewport validation above. Do not expand the processing roadmap while validating the direct engine path. After M1 is proven, move to M2 Workplace/catalog domain work.
+Complete physical macOS viewport validation for M1. Do not claim that manual runtime gate from hosted CI. Once validated, mark M1 complete and move to M2 Workplace/catalog domain work without expanding image-processing scope.
