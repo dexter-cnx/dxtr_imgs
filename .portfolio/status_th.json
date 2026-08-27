@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "title": "Dextryx Images",
+    "tagline": "แอปภาพบนเดสก์ท็อปแบบ Rust-native ด้วย GPUI โดยโฟกัส macOS ก่อน",
+    "status": "active",
+    "version": null
+  },
+  "summary": {
+    "short": "dxtr_imgs คือ Dextryx Images เวอร์ชันเดสก์ท็อปแบบ Rust-native ใช้ GPUI, local-first catalog model และเชื่อม image engine ของ Rust โดยตรง",
+    "long": "Milestone M1 ปัจจุบันมี native file dialog, direct raw-engine image path, owned RGBA rendering ใน GPUI, preview ภาพ raster ทั่วไปและ embedded-JPEG จาก RAW พร้อม Fit, 1:1, bounded zoom, pan และ zoom ผ่าน trackpad หรือ Cmd-scroll โดยยังไม่รวม real sensor RAW demosaic ใน milestone นี้"
+  },
+  "highlights": [
+    "Rust-native image engine path",
+    "GPUI desktop UI",
+    "โฟกัส production บน macOS ก่อน",
+    "Raster และ embedded-JPEG RAW preview viewport"
+  ],
+  "tech": ["Rust", "GPUI", "macOS"],
+  "links": {
+    "repository": "https://github.com/dexter-cnx/dxtr_imgs",
+    "homepage": null,
+    "package": null,
+    "docs": null,
+    "demo": null
+  },
+  "updatedAt": "2026-08-27T00:00:00Z"
+}
