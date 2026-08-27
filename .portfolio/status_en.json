@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "title": "Dextryx Images",
+    "tagline": "A Rust-native GPUI desktop image application with a macOS-first production target.",
+    "status": "active",
+    "version": null
+  },
+  "summary": {
+    "short": "dxtr_imgs is the Rust-native desktop implementation of Dextryx Images, using GPUI with a local-first catalog model and direct Rust image-engine integration.",
+    "long": "The current M1 milestone provides a native file dialog, direct raw-engine image path, owned RGBA rendering in GPUI, common raster previews, embedded-JPEG RAW previews, Fit, 1:1, bounded zoom, pan, and trackpad or Cmd-scroll zoom. Real sensor RAW demosaic is intentionally out of scope for this milestone."
+  },
+  "highlights": [
+    "Rust-native image engine path",
+    "GPUI desktop UI",
+    "macOS-first production target",
+    "Raster and embedded-JPEG RAW preview viewport"
+  ],
+  "tech": ["Rust", "GPUI", "macOS"],
+  "links": {
+    "repository": "https://github.com/dexter-cnx/dxtr_imgs",
+    "homepage": null,
+    "package": null,
+    "docs": null,
+    "demo": null
+  },
+  "updatedAt": "2026-08-27T00:00:00Z"
+}
